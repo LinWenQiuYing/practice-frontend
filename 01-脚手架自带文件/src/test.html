@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>test</title>
+</head>
+<body>
+  <div id="test"></div>
+
+
+  <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+  <script crossorigin src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+  <script type="text/babel">
+    // 创建组件
+    class Count extends React.Component {
+      // 构造器
+      constructor(props) {
+        console.log('Count---constructor')
+        super(props)
+        // 初始化状态
+        this.state = {
+          count: 0,
+        }
+      }
+
+      // 自定义加一方法
+      add = () => {
+        // 获取原来的状态
+        const { count } = this.state;
+        // 更新状态
+        this.setState({
+          count: count + 1,
+        })
+      }
+
+      // 自定义卸载组件方法
+      unmount = () => {
+        ReactDOM.unmountComponentAtNode(document.getElementById('test'))
+      }
+
+      // 自定义强制更新方法
+      force = () => {
+        this.forceUpdate()
+      }
+
+      // 组件将要挂载的钩子
+      UNSAFE_componentWillMount() {
+        console.log('Count---UNSAFE_componentWillMount')
+      }
+
+      // 组件渲染钩子
+      render() {
+        console.log('Count---render')
+        const { count } = this.state
+        return (
+          <div>
+            <h2>当前求和为：{ count }</h2>
+            <button onClick={this.add}>点我+1</button>
+            <button onClick={this.unmount}>点我卸载</button>
+            <button onClick={this.force}>强制更新</button>
+          </div>
+        )
+      }
+
+      // 组件挂载完毕的钩子
+      componentDidMount() {
+        console.log('Count---componentDidMount')
+      }
+
+      // 判断组件是否需要更新的钩子
+      shouldComponentUpdate() {
+        console.log('Count---shouldComponentUpdate')
+        return true
+      }
+
+      // 组件将要更新的钩子
+      UNSAFE_componentWillUpdate() {
+        console.log('Count---UNSAFE_componentWillUpdate')
+      }
+
+      // render
+
+      // 组件更新完毕的钩子
+      componentDidUpdate() {
+        console.log('Count---componentDidUpdate')
+      }
+
+      // 组件将要卸载的钩子
+      componentWillUnmount() {
+        console.log('Count---componentWillUnmount')
+      }
+    }
+
+    class A extends React.Component {
+      state = {
+        carName: '奔驰',
+      }
+
+      changeCar = () => {
+        this.setState({
+          carName: '宝马',
+        })
+      }
+
+      render() {
+        return (
+          <div>
+            <div>我是组件A</div>
+            <button onClick={this.changeCar}>点我换车</button>
+            <B carName={this.state.carName} />
+          </div>
+        )
+      }
+    }
+
+    class B extends React.Component {
+      UNSAFE_componentWillReceiveProps(props) {
+        // 第一次不算，从第二次传输开始生效
+        console.log('B---UNSAFE_componentWillReceiveProps', props)
+      }
+
+      render() {
+        return (
+          <div>
+            <div>我是组件B，我接收到的车是：{this.props.carName}</div>
+          </div>
+        )
+      }
+    }
+    // 渲染组件
+    ReactDOM.render(<Count/>, document.getElementById('test'))
+  </script>
+</body>
+</html>
